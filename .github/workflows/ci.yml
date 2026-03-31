@@ -107,7 +107,7 @@ jobs:
 
       - name: Test Angular
         working-directory: stargate-ui
-        run: npx ng test --watch=false --browsers=ChromeHeadless
+        run: npx ng test --watch=false
 
       - name: Build Angular
         working-directory: stargate-ui
