@@ -1,9 +1,9 @@
-using System;
+﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Stargate.API.Migrations
+namespace StargateApi.Business.Migrations
 {
     /// <inheritdoc />
     public partial class InitialCreate : Migration
@@ -33,7 +33,7 @@ namespace Stargate.API.Migrations
                     PersonId = table.Column<int>(type: "INTEGER", nullable: false),
                     CurrentRank = table.Column<string>(type: "TEXT", nullable: false),
                     CurrentDutyTitle = table.Column<string>(type: "TEXT", nullable: false),
-                    CareerStartDate = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    CareerStartDate = table.Column<DateTime>(type: "TEXT", nullable: false),
                     CareerEndDate = table.Column<DateTime>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
