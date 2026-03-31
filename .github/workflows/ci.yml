@@ -23,6 +23,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        # Combined JS/TS into one to prevent duplicate scanning of the same files
         language: [csharp, javascript-typescript]
 
     steps:
@@ -32,9 +33,12 @@ jobs:
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
         with:
-          language: ${{ matrix.language }}
+          languages: ${{ matrix.language }}
+          # Ensures CodeQL looks into the stargate-ui folder for JS/TS
+          source-root: ${{ matrix.language == 'javascript-typescript' && 'stargate-ui' || '.' }}
 
-      - name: Setup .NET 10 (for C# analysis)
+      # --- C# BUILD LOGIC ---
+      - name: Setup .NET 10
         if: matrix.language == 'csharp'
         uses: actions/setup-dotnet@v4
         with:
@@ -46,13 +50,16 @@ jobs:
           dotnet restore
           dotnet build --no-restore --configuration Release
 
-      - name: Setup Node 22 (for JS/TS analysis)
+      # --- JS/TS DEPENDENCY LOGIC ---
+      - name: Setup Node 22
         if: matrix.language == 'javascript-typescript'
         uses: actions/setup-node@v4
         with:
           node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: stargate-ui/package-lock.json
 
-      - name: Install Angular dependencies (for JS/TS analysis)
+      - name: Install Angular dependencies
         if: matrix.language == 'javascript-typescript'
         working-directory: stargate-ui
         run: npm ci
@@ -63,30 +70,36 @@ jobs:
           category: "/language:${{ matrix.language }}"
 
   build-and-test:
+    name: Build and Test
     runs-on: ubuntu-latest
+    needs: codeql # Optional: Only runs if security scan finishes or fails-fast is off
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      # --- .NET SECTION ---
       - name: Setup .NET 10
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '10.0.x'
 
-      - name: Restore dependencies
+      - name: Restore .NET dependencies
         run: dotnet restore
 
-      - name: Build
+      - name: Build .NET API
         run: dotnet build --no-restore --configuration Release
 
-      - name: Run tests
+      - name: Run .NET Tests
         run: dotnet test StargateAPI.Tests/StargateAPI.Tests.csproj --no-build --configuration Release --collect:"XPlat Code Coverage"
 
+      # --- ANGULAR SECTION ---
       - name: Setup Node 22
         uses: actions/setup-node@v4
         with:
           node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: stargate-ui/package-lock.json
 
       - name: Install Angular dependencies
         working-directory: stargate-ui
@@ -95,7 +108,7 @@ jobs:
       - name: Test Angular
         working-directory: stargate-ui
         run: npx ng test --watch=false
-    
+
       - name: Build Angular
         working-directory: stargate-ui
         run: npm run build -- --configuration production
