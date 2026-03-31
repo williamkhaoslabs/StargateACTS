@@ -482,3 +482,9 @@ $RECYCLE.BIN/
 
 # Vim temporary swap files
 *.swp
+
+# Angular
+stargate-ui/node_modules/
+stargate-ui/.angular/
+stargate-ui/dist/
+stargate-ui/.env
