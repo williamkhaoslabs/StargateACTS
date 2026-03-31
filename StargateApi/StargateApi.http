@@ -1,0 +1,6 @@
+@StargateApi_HostAddress = http://localhost:5198
+
+GET {{StargateApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
