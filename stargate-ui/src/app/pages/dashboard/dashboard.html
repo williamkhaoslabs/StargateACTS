@@ -1,0 +1,101 @@
+<section class="page-wrap">
+  <div class="hero">
+    <div>
+      <h1>Dashboard</h1>
+      <p class="subtitle">Astronaut program analytics and career statistics at a glance.</p>
+    </div>
+    <div class="export-btns">
+      <button class="btn-export" (click)="exportCSV()" [disabled]="loading">
+        <span class="export-icon">📄</span> Export CSV
+      </button>
+      <button class="btn-export" (click)="exportJSON()" [disabled]="loading">
+        <span class="export-icon">&#123;&#125;</span> Export JSON
+      </button>
+    </div>
+  </div>
+
+  @if (loading) {
+    <div class="charts-grid">
+      <app-skeleton type="chart" />
+      <app-skeleton type="chart" />
+      <app-skeleton type="chart" />
+    </div>
+  } @else {
+    <!-- Stat Cards -->
+    <div class="stat-row">
+      <div class="stat-card">
+        <div class="stat-number">{{ totalCount }}</div>
+        <div class="stat-label">Total Personnel</div>
+      </div>
+      <div class="stat-card accent-green">
+        <div class="stat-number">{{ activeCount }}</div>
+        <div class="stat-label">Active Astronauts</div>
+      </div>
+      <div class="stat-card accent-amber">
+        <div class="stat-number">{{ retiredCount }}</div>
+        <div class="stat-label">Retired</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">{{ noRecordCount }}</div>
+        <div class="stat-label">No Assignment</div>
+      </div>
+    </div>
+
+    <!-- Charts Grid -->
+    <div class="charts-grid">
+      <!-- Status Distribution Donut -->
+      <div class="chart-card">
+        <div class="chart-title">Status Distribution</div>
+        <div class="donut-wrap">
+          <div class="donut" [style.background]="donutGradient" [class.animated]="animated">
+            <div class="donut-hole">
+              <div class="donut-total">{{ totalCount }}</div>
+              <div class="donut-label">Total</div>
+            </div>
+          </div>
+          <div class="donut-legend">
+            @for (seg of statusSegments; track seg.label) {
+              <div class="legend-item">
+                <span class="legend-dot" [style.background]="seg.color"></span>
+                <span class="legend-text">{{ seg.label }}</span>
+                <span class="legend-value">{{ seg.value }} ({{ seg.percent | number:'1.0-0' }}%)</span>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+
+      <!-- Rank Distribution Bars -->
+      <div class="chart-card">
+        <div class="chart-title">Rank Distribution</div>
+        <div class="bar-chart">
+          @for (rank of rankDistribution; track rank.label) {
+            <div class="bar-row">
+              <span class="bar-label">{{ rank.label }}</span>
+              <div class="bar-track">
+                <div class="bar-fill" [style.width.%]="animated ? rank.maxPercent : 0" [style.background]="rank.color"></div>
+              </div>
+              <span class="bar-value">{{ rank.value }}</span>
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Career Length Chart -->
+      <div class="chart-card wide">
+        <div class="chart-title">Career Length (Years)</div>
+        <div class="career-chart">
+          @for (person of careerLengths; track person.name) {
+            <div class="career-bar-col">
+              <div class="career-bar-wrap">
+                <div class="career-bar" [style.height.%]="animated ? (person.years / maxCareerYears * 100) : 0" [style.background]="person.color"></div>
+              </div>
+              <div class="career-years">{{ person.years }}y</div>
+              <div class="career-name">{{ person.name }}</div>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  }
+</section>
