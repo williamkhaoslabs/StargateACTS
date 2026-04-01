@@ -80,8 +80,16 @@ StargateACTS/
 │       │   └── CreateAstronautDuty.cs
 │       └── Migrations/
 │
-├── StargateAPI.Tests/               
-│   └── StargateAPI.Tests.csproj
+├── StargateAPI.Tests/
+│   ├── StargateAPI.Tests.csproj
+│   ├── TestDbContextFactory.cs    
+│   ├── MockLogService.cs    
+│   ├── CreateAstronautDutyHandlerTests.cs
+│   ├── CreateAstronautDutyPreProcessorTests.cs
+│   ├── CreatePersonTests.cs
+│   ├── GetAstronautDutiesByNameHandlerTests.cs
+│   ├── QueryHandlerTests.cs
+│   └── LogServiceTests.cs
 │
 └── stargate-ui/                     
     └── src/app/
@@ -378,4 +386,3 @@ All API operations are logged to the database via `ILogService`.
 | Timestamp | DateTime | UTC timestamp of the event |
 | Source | string | Handler or middleware class name |
 | StackTrace | string? | Nullable — populated on exceptions only |
-
