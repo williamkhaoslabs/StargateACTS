@@ -1,0 +1,911 @@
+{
+	"info": {
+		"_postman_id": "stargate-acts-collection",
+		"name": "Stargate ACTS API",
+		"description": "Complete test collection for the Stargate Astronaut Career Tracking System API.\n\nBase URL defaults to https://localhost:5001. Update the {{baseUrl}} variable if your port differs.\n\n**Run Order:**\n1. Create People first\n2. Assign Duties\n3. Query to verify\n4. Edge cases & validation",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "https://localhost:5001",
+			"type": "string"
+		}
+	],
+	"item": [
+		{
+			"name": "1 — Create People",
+			"description": "POST /Person — Create person records before assigning duties.",
+			"item": [
+				{
+					"name": "Create Person — Neil Armstrong",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status is 200', () => pm.response.to.have.status(200));",
+									"pm.test('Success is true', () => {",
+									"    const json = pm.response.json();",
+									"    pm.expect(json.success).to.be.true;",
+									"    pm.expect(json.id).to.be.above(0);",
+									"});",
+									"",
+									"// Store the ID for later use",
+									"const json = pm.response.json();",
+									"pm.collectionVariables.set('neilId', json.id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "\"Neil Armstrong\""
+						},
+						"url": {
+							"raw": "{{baseUrl}}/Person",
+							"host": ["{{baseUrl}}"],
+							"path": ["Person"]
+						}
+					}
+				},
+				{
+					"name": "Create Person — Buzz Aldrin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status is 200', () => pm.response.to.have.status(200));",
+									"pm.test('Success is true', () => {",
+									"    const json = pm.response.json();",
+									"    pm.expect(json.success).to.be.true;",
+									"    pm.expect(json.id).to.be.above(0);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "\"Buzz Aldrin\""
+						},
+						"url": {
+							"raw": "{{baseUrl}}/Person",
+							"host": ["{{baseUrl}}"],
+							"path": ["Person"]
+						}
+					}
+				},
+				{
+					"name": "Create Person — Sally Ride",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status is 200', () => pm.response.to.have.status(200));",
+									"pm.test('Success is true', () => {",
+									"    const json = pm.response.json();",
+									"    pm.expect(json.success).to.be.true;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "\"Sally Ride\""
+						},
+						"url": {
+							"raw": "{{baseUrl}}/Person",
+							"host": ["{{baseUrl}}"],
+							"path": ["Person"]
+						}
+					}
+				},
+				{
+					"name": "Create Person — Chris Hadfield (civilian, no duties)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status is 200', () => pm.response.to.have.status(200));",
+									"pm.test('Success is true', () => {",
+									"    const json = pm.response.json();",
+									"    pm.expect(json.success).to.be.true;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "\"Chris Hadfield\""
+						},
+						"url": {
+							"raw": "{{baseUrl}}/Person",
+							"host": ["{{baseUrl}}"],
+							"path": ["Person"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "2 — Assign Astronaut Duties",
+			"description": "POST /AstronautDuty — Assign duties to test business rules.",
+			"item": [
+				{
+					"name": "Neil — First Duty (creates AstronautDetail)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status is 200', () => pm.response.to.have.status(200));",
+									"pm.test('Duty created', () => {",
+									"    const json = pm.response.json();",
+									"    pm.expect(json.success).to.be.true;",
+									"    pm.expect(json.id).to.be.above(0);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Neil Armstrong\",\n    \"rank\": \"Colonel\",\n    \"dutyTitle\": \"Commander\",\n    \"dutyStartDate\": \"2024-01-15\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/AstronautDuty",
+							"host": ["{{baseUrl}}"],
+							"path": ["AstronautDuty"]
+						}
+					}
+				},
+				{
+					"name": "Neil — Second Duty (closes previous, Rule 5)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status is 200', () => pm.response.to.have.status(200));",
+									"pm.test('Duty created', () => {",
+									"    const json = pm.response.json();",
+									"    pm.expect(json.success).to.be.true;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Neil Armstrong\",\n    \"rank\": \"Brigadier General\",\n    \"dutyTitle\": \"Mission Specialist\",\n    \"dutyStartDate\": \"2024-07-01\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/AstronautDuty",
+							"host": ["{{baseUrl}}"],
+							"path": ["AstronautDuty"]
+						}
+					}
+				},
+				{
+					"name": "Buzz — First Duty",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status is 200', () => pm.response.to.have.status(200));",
+									"pm.test('Success', () => pm.expect(pm.response.json().success).to.be.true);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Buzz Aldrin\",\n    \"rank\": \"Major\",\n    \"dutyTitle\": \"Pilot\",\n    \"dutyStartDate\": \"2024-03-01\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/AstronautDuty",
+							"host": ["{{baseUrl}}"],
+							"path": ["AstronautDuty"]
+						}
+					}
+				},
+				{
+					"name": "Sally — First Duty",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status is 200', () => pm.response.to.have.status(200));",
+									"pm.test('Success', () => pm.expect(pm.response.json().success).to.be.true);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Sally Ride\",\n    \"rank\": \"Captain\",\n    \"dutyTitle\": \"Mission Specialist\",\n    \"dutyStartDate\": \"2024-02-01\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/AstronautDuty",
+							"host": ["{{baseUrl}}"],
+							"path": ["AstronautDuty"]
+						}
+					}
+				},
+				{
+					"name": "Sally — RETIRED (sets CareerEndDate, Rule 6 & 7)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status is 200', () => pm.response.to.have.status(200));",
+									"pm.test('Retired duty created', () => {",
+									"    const json = pm.response.json();",
+									"    pm.expect(json.success).to.be.true;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Sally Ride\",\n    \"rank\": \"Captain\",\n    \"dutyTitle\": \"RETIRED\",\n    \"dutyStartDate\": \"2025-01-01\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/AstronautDuty",
+							"host": ["{{baseUrl}}"],
+							"path": ["AstronautDuty"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "3 — Query & Verify",
+			"description": "GET endpoints — verify data integrity after creates.",
+			"item": [
+				{
+					"name": "Get All People",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status is 200', () => pm.response.to.have.status(200));",
+									"pm.test('Returns people array', () => {",
+									"    const json = pm.response.json();",
+									"    pm.expect(json.success).to.be.true;",
+									"    pm.expect(json.people).to.be.an('array');",
+									"    pm.expect(json.people.length).to.be.at.least(4);",
+									"});",
+									"",
+									"pm.test('Chris Hadfield has no astronaut detail (Rule 2)', () => {",
+									"    const json = pm.response.json();",
+									"    const chris = json.people.find(p => p.name === 'Chris Hadfield');",
+									"    pm.expect(chris).to.exist;",
+									"    pm.expect(chris.currentRank).to.be.null;",
+									"    pm.expect(chris.currentDutyTitle).to.be.null;",
+									"});",
+									"",
+									"pm.test('Sally Ride shows as RETIRED', () => {",
+									"    const json = pm.response.json();",
+									"    const sally = json.people.find(p => p.name === 'Sally Ride');",
+									"    pm.expect(sally).to.exist;",
+									"    pm.expect(sally.currentDutyTitle).to.eql('RETIRED');",
+									"    pm.expect(sally.careerEndDate).to.not.be.null;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/Person",
+							"host": ["{{baseUrl}}"],
+							"path": ["Person"]
+						}
+					}
+				},
+				{
+					"name": "Get Person — Neil Armstrong",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status is 200', () => pm.response.to.have.status(200));",
+									"pm.test('Returns Neil with updated rank/title', () => {",
+									"    const json = pm.response.json();",
+									"    pm.expect(json.success).to.be.true;",
+									"    pm.expect(json.person.name).to.eql('Neil Armstrong');",
+									"    pm.expect(json.person.currentRank).to.eql('Brigadier General');",
+									"    pm.expect(json.person.currentDutyTitle).to.eql('Mission Specialist');",
+									"    pm.expect(json.person.careerEndDate).to.be.null;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/Person/Neil Armstrong",
+							"host": ["{{baseUrl}}"],
+							"path": ["Person", "Neil Armstrong"]
+						}
+					}
+				},
+				{
+					"name": "Get Person — Sally Ride (retired)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status is 200', () => pm.response.to.have.status(200));",
+									"pm.test('Sally is retired with CareerEndDate', () => {",
+									"    const json = pm.response.json();",
+									"    pm.expect(json.person.currentDutyTitle).to.eql('RETIRED');",
+									"    pm.expect(json.person.careerEndDate).to.not.be.null;",
+									"});",
+									"",
+									"pm.test('CareerEndDate is one day before RETIRED start (Rule 7)', () => {",
+									"    const json = pm.response.json();",
+									"    // RETIRED start was 2025-01-01, so CareerEndDate should be 2024-12-31",
+									"    pm.expect(json.person.careerEndDate).to.include('2024-12-31');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/Person/Sally Ride",
+							"host": ["{{baseUrl}}"],
+							"path": ["Person", "Sally Ride"]
+						}
+					}
+				},
+				{
+					"name": "Get Duties — Neil Armstrong",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status is 200', () => pm.response.to.have.status(200));",
+									"pm.test('Returns person + duties', () => {",
+									"    const json = pm.response.json();",
+									"    pm.expect(json.success).to.be.true;",
+									"    pm.expect(json.person).to.exist;",
+									"    pm.expect(json.astronautDuties).to.be.an('array');",
+									"    pm.expect(json.astronautDuties.length).to.eql(2);",
+									"});",
+									"",
+									"pm.test('Previous duty has end date (Rule 5)', () => {",
+									"    const json = pm.response.json();",
+									"    // Duties sorted newest-first",
+									"    const currentDuty = json.astronautDuties[0];",
+									"    const previousDuty = json.astronautDuties[1];",
+									"",
+									"    // Current duty has no end date (Rule 4)",
+									"    pm.expect(currentDuty.dutyEndDate).to.be.null;",
+									"    pm.expect(currentDuty.dutyTitle).to.eql('Mission Specialist');",
+									"",
+									"    // Previous duty end date = new start - 1 day",
+									"    pm.expect(previousDuty.dutyEndDate).to.not.be.null;",
+									"    pm.expect(previousDuty.dutyEndDate).to.include('2024-06-30');",
+									"    pm.expect(previousDuty.dutyTitle).to.eql('Commander');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/AstronautDuty/Neil Armstrong",
+							"host": ["{{baseUrl}}"],
+							"path": ["AstronautDuty", "Neil Armstrong"]
+						}
+					}
+				},
+				{
+					"name": "Get Duties — Sally Ride (retired)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status is 200', () => pm.response.to.have.status(200));",
+									"pm.test('Has 2 duties (active + RETIRED)', () => {",
+									"    const json = pm.response.json();",
+									"    pm.expect(json.astronautDuties.length).to.eql(2);",
+									"});",
+									"",
+									"pm.test('Latest duty is RETIRED', () => {",
+									"    const json = pm.response.json();",
+									"    pm.expect(json.astronautDuties[0].dutyTitle).to.eql('RETIRED');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/AstronautDuty/Sally Ride",
+							"host": ["{{baseUrl}}"],
+							"path": ["AstronautDuty", "Sally Ride"]
+						}
+					}
+				},
+				{
+					"name": "Get Duties — Chris Hadfield (no duties, Rule 2)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status is 200', () => pm.response.to.have.status(200));",
+									"pm.test('Person exists but has empty duty list', () => {",
+									"    const json = pm.response.json();",
+									"    pm.expect(json.success).to.be.true;",
+									"    pm.expect(json.person).to.exist;",
+									"    pm.expect(json.person.name).to.eql('Chris Hadfield');",
+									"    pm.expect(json.astronautDuties).to.be.an('array').that.is.empty;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/AstronautDuty/Chris Hadfield",
+							"host": ["{{baseUrl}}"],
+							"path": ["AstronautDuty", "Chris Hadfield"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "4 — Validation & Edge Cases",
+			"description": "Negative tests — verify proper error handling and business rule enforcement.",
+			"item": [
+				{
+					"name": "Create Person — Duplicate (400)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status is 400', () => pm.response.to.have.status(400));",
+									"pm.test('Error message mentions duplicate', () => {",
+									"    const json = pm.response.json();",
+									"    pm.expect(json.success).to.be.false;",
+									"    pm.expect(json.message).to.include('already exists');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "\"Neil Armstrong\""
+						},
+						"url": {
+							"raw": "{{baseUrl}}/Person",
+							"host": ["{{baseUrl}}"],
+							"path": ["Person"]
+						}
+					}
+				},
+				{
+					"name": "Create Person — Empty Name (400)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status is 400', () => pm.response.to.have.status(400));",
+									"pm.test('Error message mentions name', () => {",
+									"    const json = pm.response.json();",
+									"    pm.expect(json.success).to.be.false;",
+									"    pm.expect(json.message.toLowerCase()).to.include('name');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "\"   \""
+						},
+						"url": {
+							"raw": "{{baseUrl}}/Person",
+							"host": ["{{baseUrl}}"],
+							"path": ["Person"]
+						}
+					}
+				},
+				{
+					"name": "Create Duty — Person Not Found (400)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status is 400', () => pm.response.to.have.status(400));",
+									"pm.test('Error says person not found', () => {",
+									"    const json = pm.response.json();",
+									"    pm.expect(json.success).to.be.false;",
+									"    pm.expect(json.message).to.include('not found');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Nobody Here\",\n    \"rank\": \"Private\",\n    \"dutyTitle\": \"Guard\",\n    \"dutyStartDate\": \"2024-01-01\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/AstronautDuty",
+							"host": ["{{baseUrl}}"],
+							"path": ["AstronautDuty"]
+						}
+					}
+				},
+				{
+					"name": "Create Duty — Duplicate Duty (400)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status is 400', () => pm.response.to.have.status(400));",
+									"pm.test('Error says already exists', () => {",
+									"    const json = pm.response.json();",
+									"    pm.expect(json.success).to.be.false;",
+									"    pm.expect(json.message).to.include('already exists');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Neil Armstrong\",\n    \"rank\": \"Colonel\",\n    \"dutyTitle\": \"Commander\",\n    \"dutyStartDate\": \"2024-01-15\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/AstronautDuty",
+							"host": ["{{baseUrl}}"],
+							"path": ["AstronautDuty"]
+						}
+					}
+				},
+				{
+					"name": "Create Duty — Empty Rank (400)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status is 400', () => pm.response.to.have.status(400));",
+									"pm.test('Error mentions rank', () => {",
+									"    const json = pm.response.json();",
+									"    pm.expect(json.message.toLowerCase()).to.include('rank');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Neil Armstrong\",\n    \"rank\": \"\",\n    \"dutyTitle\": \"Pilot\",\n    \"dutyStartDate\": \"2025-06-01\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/AstronautDuty",
+							"host": ["{{baseUrl}}"],
+							"path": ["AstronautDuty"]
+						}
+					}
+				},
+				{
+					"name": "Create Duty — Empty Duty Title (400)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status is 400', () => pm.response.to.have.status(400));",
+									"pm.test('Error mentions duty title', () => {",
+									"    const json = pm.response.json();",
+									"    pm.expect(json.message.toLowerCase()).to.include('duty title');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Neil Armstrong\",\n    \"rank\": \"Colonel\",\n    \"dutyTitle\": \"\",\n    \"dutyStartDate\": \"2025-06-01\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/AstronautDuty",
+							"host": ["{{baseUrl}}"],
+							"path": ["AstronautDuty"]
+						}
+					}
+				},
+				{
+					"name": "Get Person — Not Found (404)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status is 404', () => pm.response.to.have.status(404));",
+									"pm.test('Error response envelope', () => {",
+									"    const json = pm.response.json();",
+									"    pm.expect(json.success).to.be.false;",
+									"    pm.expect(json.message).to.include('not found');",
+									"    pm.expect(json.responseCode).to.eql(404);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/Person/Does Not Exist",
+							"host": ["{{baseUrl}}"],
+							"path": ["Person", "Does Not Exist"]
+						}
+					}
+				},
+				{
+					"name": "Get Duties — Not Found (404)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status is 404', () => pm.response.to.have.status(404));",
+									"pm.test('Error response envelope', () => {",
+									"    const json = pm.response.json();",
+									"    pm.expect(json.success).to.be.false;",
+									"    pm.expect(json.responseCode).to.eql(404);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/AstronautDuty/Does Not Exist",
+							"host": ["{{baseUrl}}"],
+							"path": ["AstronautDuty", "Does Not Exist"]
+						}
+					}
+				},
+				{
+					"name": "SQL Injection Attempt (should return 404, not data)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status is 404 — not a data dump', () => {",
+									"    pm.response.to.have.status(404);",
+									"});",
+									"",
+									"pm.test('Response does not contain multiple people', () => {",
+									"    const body = pm.response.text();",
+									"    pm.expect(body).to.not.include('Neil Armstrong');",
+									"    pm.expect(body).to.not.include('Buzz Aldrin');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/Person/' OR 1=1 --",
+							"host": ["{{baseUrl}}"],
+							"path": ["Person", "' OR 1=1 --"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "5 — Process Logging Verification",
+			"description": "After running the above requests, check that logs were written to the database.\n\nNote: There's no GET /ProcessLog endpoint in the API spec, so these are manual DB checks.\nYou can verify via: sqlite3 starbase.db \"SELECT * FROM ProcessLog ORDER BY Id DESC LIMIT 10;\"",
+			"item": [
+				{
+					"name": "⚠️ README — Check Logs in Database",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/Person",
+							"host": ["{{baseUrl}}"],
+							"path": ["Person"]
+						},
+						"description": "Process logs are stored in the database, not exposed via API.\n\nAfter running this collection, verify logs by running:\n\n  sqlite3 starbase.db \"SELECT * FROM ProcessLog ORDER BY Id DESC LIMIT 20;\"\n\nExpected rows:\n- Information: Person created (4 rows)\n- Information: Astronaut duty assigned (5 rows)\n- Information: Retrieved people / person (from GET calls)\n- Error: Any validation failures from Section 4"
+					}
+				}
+			]
+		}
+	]
+}
