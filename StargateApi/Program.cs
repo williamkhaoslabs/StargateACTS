@@ -1,3 +1,4 @@
+using API.Middleware;
 using Microsoft.EntityFrameworkCore;
 using StargateAPI.Business.Commands;
 using StargateAPI.Business.Data;
@@ -30,6 +31,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.UseCors(x => x
     .AllowAnyHeader()
