@@ -33,10 +33,8 @@ jobs:
         uses: github/codeql-action/init@v3
         with:
           languages: ${{ matrix.language }}
-          # Tell CodeQL exactly where the JS code is to avoid scanning C# folders
           source-root: ${{ matrix.language == 'javascript-typescript' && 'stargate-ui' || '.' }}
       
-      # --- ONLY RUN .NET SETUP/BUILD FOR CSHARP ---
       - name: Setup .NET 9
         if: matrix.language == 'csharp'
         uses: actions/setup-dotnet@v4
@@ -49,7 +47,6 @@ jobs:
           dotnet clean
           dotnet build --configuration Release --no-incremental
       
-      # --- ONLY RUN NODE SETUP/INSTALL FOR JS/TS ---
       - name: Setup Node 22
         if: matrix.language == 'javascript-typescript'
         uses: actions/setup-node@v4
