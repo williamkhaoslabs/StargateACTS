@@ -114,8 +114,8 @@
                 </td>
                 <td>{{ person.currentRank || '—' }}</td>
                 <td>{{ person.currentDutyTitle || '—' }}</td>
-                <td>{{ formatDate(person.careerStartDate) }}</td>
-                <td>{{ formatDate(person.careerEndDate) }}</td>
+                <td>{{ person.careerStartDate | safeDate }}</td>
+                <td>{{ person.careerEndDate | safeDate }}</td>
                 <td>
                   <app-status-badge [dutyTitle]="person.currentDutyTitle" [careerStartDate]="person.careerStartDate" />
                 </td>

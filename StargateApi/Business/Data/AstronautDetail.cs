@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace StargateAPI.Business.Data;
 
-[Table("AstronautDetail")]
 public class AstronautDetail
 {
     public int Id { get; set; }
