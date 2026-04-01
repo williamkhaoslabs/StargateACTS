@@ -1,32 +1,24 @@
-using System.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace StargateAPI.Business.Data;
 
-public class StargateContext : DbContext
+public class StargateContext(DbContextOptions options) : DbContext (options)
     {
-        public IDbConnection Connection => Database.GetDbConnection();
         public DbSet<Person> People { get; set; }
         public DbSet<AstronautDetail> AstronautDetails { get; set; }
         public DbSet<AstronautDuty> AstronautDuties { get; set; }
-
-        public StargateContext(DbContextOptions<StargateContext> options)
-        : base(options)
-        {
-        }
+        
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(StargateContext).Assembly);
-
-            //SeedData(modelBuilder);
+            
 
             base.OnModelCreating(modelBuilder);
         }
 
         private static void SeedData(ModelBuilder modelBuilder)
         {
-            //add seed data
             modelBuilder.Entity<Person>()
                 .HasData(
                     new Person

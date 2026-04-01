@@ -1,5 +1,6 @@
 using Dapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using StargateAPI.Business.Data;
 using StargateAPI.Business.Dtos;
 using StargateAPI.Controllers;
@@ -21,15 +22,22 @@ public class GetPersonByNameHandler : IRequestHandler<GetPersonByName, GetPerson
 
     public async Task<GetPersonByNameResult> Handle(GetPersonByName request, CancellationToken cancellationToken)
     {
-        var result = new GetPersonByNameResult();
-
-        var query = $"SELECT a.Id as PersonId, a.Name, b.CurrentRank, b.CurrentDutyTitle, b.CareerStartDate, b.CareerEndDate FROM [Person] a LEFT JOIN [AstronautDetail] b on b.PersonId = a.Id WHERE '{request.Name}' = a.Name";
-
-        var person = await _context.Connection.QueryAsync<PersonAstronaut>(query);
-
-        result.Person = person.FirstOrDefault();
-
-        return result;
+        var person = await _context.People
+            .Include(p => p.AstronautDetail)
+            .FirstOrDefaultAsync(p => p.Name == request.Name, cancellationToken);
+        
+        return new GetPersonByNameResult
+        {
+            Person = new PersonAstronaut
+            {
+                PersonId = person.Id,
+                Name = person.Name,
+                CurrentRank = person.AstronautDetail?.CurrentRank,
+                CurrentDutyTitle = person.AstronautDetail?.CurrentDutyTitle,
+                CareerStartDate = person.AstronautDetail?.CareerStartDate,
+                CareerEndDate = person.AstronautDetail?.CareerEndDate
+            }
+        };
     }
 }
 
