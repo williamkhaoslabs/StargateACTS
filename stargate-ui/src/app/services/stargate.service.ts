@@ -11,7 +11,7 @@ import {
   CreateAstronautDutyResponse
 } from '../models/api-response.model';
 import { MOCK_PEOPLE, MOCK_DUTIES, MOCK_PROCESS_LOGS } from './mock-data';
-import {environment} from '../../environments/enviroment.development';
+import {environment} from '../../environments/environment.development';
 
 @Injectable({ providedIn: 'root' })
 export class StargateService {

@@ -1,0 +1,112 @@
+.page-wrap {
+  max-width: 1400px; margin: 0 auto;
+  background: var(--bg-surface-soft); border: 1px solid var(--border);
+  box-shadow: var(--shadow-md); transition: background 0.3s;
+}
+
+.hero {
+  padding: 36px 48px 28px; display: flex; justify-content: space-between; align-items: flex-start;
+  border-bottom: 1px solid var(--border); background: var(--bg-surface); transition: background 0.3s;
+  h1 { margin: 0 0 6px; font-size: 30px; font-weight: 800; color: var(--text-primary); }
+  .subtitle { margin: 0; color: var(--text-muted); font-size: 16px; }
+}
+
+.export-btns { display: flex; gap: 10px; }
+.btn-export {
+  display: inline-flex; align-items: center; gap: 8px;
+  height: 40px; padding: 0 18px; border-radius: 8px;
+  border: 1px solid var(--border-input); background: var(--bg-surface);
+  color: var(--text-body); font-weight: 700; font-size: 13px;
+  cursor: pointer; font-family: inherit; transition: all 0.15s;
+  &:hover:not(:disabled) { background: var(--bg-hover); }
+  &:disabled { opacity: 0.5; cursor: not-allowed; }
+  .export-icon { font-size: 15px; }
+}
+
+.stat-row {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
+  padding: 24px 32px;
+}
+.stat-card {
+  background: var(--bg-surface); border: 1px solid var(--border);
+  padding: 22px 24px; border-radius: 12px; text-align: center; transition: all 0.3s;
+  &.accent-green { border-left: 4px solid var(--success); }
+  &.accent-amber { border-left: 4px solid var(--warning); }
+  .stat-number { font-size: 36px; font-weight: 800; color: var(--text-primary); line-height: 1.1; }
+  .stat-label { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-muted); margin-top: 6px; }
+}
+
+.charts-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
+  padding: 0 32px 32px;
+}
+
+.chart-card {
+  background: var(--bg-surface); border: 1px solid var(--border);
+  border-radius: 12px; padding: 24px; transition: background 0.3s;
+  &.wide { grid-column: 1 / -1; }
+}
+
+.chart-title {
+  font-size: 16px; font-weight: 800; color: var(--text-primary);
+  margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid var(--border-light);
+}
+
+// Donut Chart
+.donut-wrap { display: flex; align-items: center; gap: 32px; }
+.donut {
+  width: 180px; height: 180px; border-radius: 50%;
+  display: grid; place-items: center; flex-shrink: 0;
+  transform: scale(0.8); opacity: 0;
+  transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.4s;
+  &.animated { transform: scale(1); opacity: 1; }
+}
+.donut-hole {
+  width: 100px; height: 100px; border-radius: 50%;
+  background: var(--bg-surface); display: grid; place-items: center;
+  text-align: center; transition: background 0.3s;
+}
+.donut-total { font-size: 28px; font-weight: 800; color: var(--text-primary); line-height: 1.1; }
+.donut-label { font-size: 12px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; }
+
+.donut-legend { display: flex; flex-direction: column; gap: 12px; }
+.legend-item { display: flex; align-items: center; gap: 10px; }
+.legend-dot { width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0; }
+.legend-text { font-size: 14px; font-weight: 700; color: var(--text-body); }
+.legend-value { font-size: 13px; color: var(--text-muted); margin-left: auto; }
+
+// Bar Chart
+.bar-chart { display: flex; flex-direction: column; gap: 14px; }
+.bar-row { display: grid; grid-template-columns: 140px 1fr 40px; gap: 12px; align-items: center; }
+.bar-label { font-size: 13px; font-weight: 700; color: var(--text-body); text-align: right; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.bar-track { height: 28px; background: var(--bg-elevated); border-radius: 6px; overflow: hidden; }
+.bar-fill {
+  height: 100%; border-radius: 6px; width: 0;
+  transition: width 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.bar-value { font-size: 14px; font-weight: 800; color: var(--text-primary); }
+
+// Career Length Vertical Bars
+.career-chart {
+  display: flex; align-items: flex-end; gap: 12px;
+  height: 220px; padding-top: 10px;
+}
+.career-bar-col {
+  flex: 1; display: flex; flex-direction: column; align-items: center;
+}
+.career-bar-wrap {
+  width: 100%; height: 160px; display: flex; align-items: flex-end;
+}
+.career-bar {
+  width: 100%; border-radius: 6px 6px 0 0; height: 0;
+  transition: height 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+  min-height: 4px;
+}
+.career-years { font-size: 13px; font-weight: 800; color: var(--text-primary); margin-top: 8px; }
+.career-name { font-size: 11px; color: var(--text-muted); text-align: center; margin-top: 2px; }
+
+@media (max-width: 900px) {
+  .stat-row { grid-template-columns: repeat(2, 1fr); }
+  .charts-grid { grid-template-columns: 1fr; }
+  .donut-wrap { flex-direction: column; }
+}
