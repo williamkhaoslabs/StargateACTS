@@ -1,0 +1,43 @@
+@if (type === 'table') {
+  <div class="skeleton-table">
+    @for (row of rows; track row) {
+      <div class="skeleton-row">
+        <div class="sk-cell sk-avatar"></div>
+        <div class="sk-cell sk-name"></div>
+        <div class="sk-cell sk-medium"></div>
+        <div class="sk-cell sk-medium"></div>
+        <div class="sk-cell sk-short"></div>
+        <div class="sk-cell sk-short"></div>
+        <div class="sk-cell sk-badge"></div>
+      </div>
+    }
+  </div>
+}
+@if (type === 'card') {
+  <div class="skeleton-card">
+    <div class="sk-line sk-title"></div>
+    <div class="sk-line sk-full"></div>
+    <div class="sk-line sk-full"></div>
+    <div class="sk-line sk-half"></div>
+  </div>
+}
+@if (type === 'profile') {
+  <div class="skeleton-profile">
+    <div class="sk-avatar-lg"></div>
+    <div class="sk-info">
+      <div class="sk-line sk-title"></div>
+      <div class="sk-line sk-medium"></div>
+      <div class="sk-line sk-half"></div>
+    </div>
+  </div>
+}
+@if (type === 'chart') {
+  <div class="skeleton-chart">
+    <div class="sk-line sk-title" style="margin-bottom:20px"></div>
+    <div class="sk-bars">
+      @for (bar of chartBars; track bar) {
+        <div class="sk-bar" [style.height.%]="bar"></div>
+      }
+    </div>
+  </div>
+}

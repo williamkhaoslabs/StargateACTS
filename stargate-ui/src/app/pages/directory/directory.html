@@ -1,0 +1,152 @@
+<section class="page-wrap">
+  <div class="hero">
+    <div>
+      <h1>People Directory</h1>
+      <p class="subtitle">Search, review, and manage astronaut career records.</p>
+    </div>
+    <a class="btn-primary" routerLink="/add-person">
+      <span class="btn-icon">+</span>
+      Add Person
+    </a>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-label">Total People</div>
+      <div class="stat-value">{{ totalCount }}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Active Astronauts</div>
+      <div class="stat-value accent">{{ activeCount }}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Retired</div>
+      <div class="stat-value muted">{{ retiredCount }}</div>
+    </div>
+  </div>
+
+  <div class="filters" role="search" aria-label="Filter personnel roster">
+    <div class="search-field">
+      <span class="search-icon" aria-hidden="true">⌕</span>
+      <input
+        type="text"
+        placeholder="Search by person name..."
+        [(ngModel)]="searchTerm"
+        (ngModelChange)="applyFilters()"
+        aria-label="Search by person name"
+      />
+    </div>
+    <select class="filter-select" [(ngModel)]="statusFilter" (ngModelChange)="applyFilters()" aria-label="Filter by status">
+      <option value="all">Status: All</option>
+      <option value="active">Active</option>
+      <option value="retired">Retired</option>
+      <option value="none">No Record</option>
+    </select>
+    <select class="filter-select" [(ngModel)]="sortField" (ngModelChange)="applyFilters()" aria-label="Sort order">
+      <option value="name">Sort: Name</option>
+      <option value="rank">Sort: Rank</option>
+      <option value="career">Sort: Career Start</option>
+    </select>
+  </div>
+
+  @if (loading) {
+    <table>
+      <thead>
+      <tr>
+        <th>Name</th><th>Current Rank</th><th>Current Duty</th>
+        <th>Career Start</th><th>Career End</th><th>Status</th><th></th>
+      </tr>
+      </thead>
+    </table>
+    <app-skeleton type="table" [count]="8" />
+  }
+
+  @if (error && !loading) {
+    <div class="error-state">
+      <div class="error-icon">!</div>
+      <p>{{ error }}</p>
+      <button class="btn-secondary" (click)="loadPeople()">Retry</button>
+    </div>
+  }
+
+  @if (!loading && !error) {
+    @if (filteredPeople.length === 0) {
+      <div class="empty-state">
+        <div class="empty-icon">👤</div>
+        <p class="empty-title">No people found</p>
+        <p class="empty-sub">{{ searchTerm ? 'Try a different search term.' : 'Add someone to get started.' }}</p>
+      </div>
+    } @else {
+      <div class="table-wrap">
+        <table aria-label="Personnel roster">
+          <thead>
+          <tr>
+            <th scope="col">Name</th><th scope="col">Current Rank</th><th scope="col">Current Duty</th>
+            <th scope="col">Career Start</th><th scope="col">Career End</th><th scope="col">Status</th><th scope="col"><span class="sr-only">Actions</span></th>
+          </tr>
+          </thead>
+          <tbody>
+            @for (person of pagedPeople; track person.personId) {
+              <tr class="row-link" [routerLink]="['/duties', person.name]">
+                <td (click)="$event.stopPropagation()">
+                  @if (editingPersonId === person.personId) {
+                    <div class="inline-edit">
+                      <input
+                        class="inline-input"
+                        [class.error]="editError"
+                        [(ngModel)]="editingName"
+                        (keydown)="onEditKeydown($event, person)"
+                        (blur)="saveEdit(person)"
+                        autofocus
+                        aria-label="Edit person name"
+                      />
+                      @if (editError) {
+                        <div class="inline-error">{{ editError }}</div>
+                      }
+                    </div>
+                  } @else {
+                    <div class="person-name" (dblclick)="startEdit(person, $event)" title="Double-click to edit name">
+                      <span class="avatar">{{ getInitials(person.name) }}</span>
+                      {{ person.name }}
+                      <span class="edit-hint" aria-hidden="true">✎</span>
+                    </div>
+                  }
+                </td>
+                <td>{{ person.currentRank || '—' }}</td>
+                <td>{{ person.currentDutyTitle || '—' }}</td>
+                <td>{{ formatDate(person.careerStartDate) }}</td>
+                <td>{{ formatDate(person.careerEndDate) }}</td>
+                <td>
+                  <app-status-badge [dutyTitle]="person.currentDutyTitle" [careerStartDate]="person.careerStartDate" />
+                </td>
+                <td (click)="$event.stopPropagation()">
+                  <div class="row-actions">
+                    <button class="view-btn" (click)="openDrawer(person.name, $event)" title="Quick view">👁</button>
+                    <a class="view-btn" [routerLink]="['/duties', person.name]">→</a>
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      @if (totalPages > 1) {
+        <div class="pagination">
+          <button class="page-btn" (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1">‹</button>
+          @for (page of pageNumbers; track page) {
+            <button class="page-btn" [class.active]="page === currentPage" (click)="goToPage(page)">{{ page }}</button>
+          }
+          <button class="page-btn" (click)="goToPage(currentPage + 1)" [disabled]="currentPage === totalPages">›</button>
+          <span class="page-info">{{ filteredPeople.length }} results</span>
+        </div>
+      }
+    }
+  }
+</section>
+
+<app-detail-drawer
+  [personName]="drawerPersonName"
+  [isOpen]="drawerOpen"
+  (close)="closeDrawer()"
+/>
