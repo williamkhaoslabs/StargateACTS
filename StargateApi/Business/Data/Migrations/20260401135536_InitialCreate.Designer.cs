@@ -8,9 +8,10 @@ using StargateAPI.Business.Data;
 
 #nullable disable
 
-namespace StargateApi.Business.Migrations
+namespace StargateApi.Business.Data.Migrations
 {
     [DbContext(typeof(StargateContext))]
+    [Migration("20260401135536_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -48,6 +49,16 @@ namespace StargateApi.Business.Migrations
                         .IsUnique();
 
                     b.ToTable("AstronautDetail");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CareerStartDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CurrentDutyTitle = "Commander",
+                            CurrentRank = "1LT",
+                            PersonId = 1
+                        });
                 });
 
             modelBuilder.Entity("StargateAPI.Business.Data.AstronautDuty", b =>
@@ -78,6 +89,16 @@ namespace StargateApi.Business.Migrations
                     b.HasIndex("PersonId");
 
                     b.ToTable("AstronautDuty");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            DutyStartDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            DutyTitle = "Commander",
+                            PersonId = 1,
+                            Rank = "1LT"
+                        });
                 });
 
             modelBuilder.Entity("StargateAPI.Business.Data.Person", b =>
@@ -88,11 +109,60 @@ namespace StargateApi.Business.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
+                        .HasMaxLength(200)
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Name")
+                        .IsUnique();
+
                     b.ToTable("Person");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "John Doe"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Jane Doe"
+                        });
+                });
+
+            modelBuilder.Entity("StargateAPI.Business.Data.ProcessLog", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("LogLevel")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Source")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("StackTrace")
+                        .HasMaxLength(8000)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("Timestamp")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ProcessLog");
                 });
 
             modelBuilder.Entity("StargateAPI.Business.Data.AstronautDetail", b =>

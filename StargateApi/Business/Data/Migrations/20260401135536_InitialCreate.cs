@@ -3,7 +3,9 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace StargateApi.Business.Migrations
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
+namespace StargateApi.Business.Data.Migrations
 {
     /// <inheritdoc />
     public partial class InitialCreate : Migration
@@ -17,11 +19,28 @@ namespace StargateApi.Business.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(type: "TEXT", nullable: false)
+                    Name = table.Column<string>(type: "TEXT", maxLength: 200, nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Person", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ProcessLog",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Message = table.Column<string>(type: "TEXT", maxLength: 2000, nullable: false),
+                    LogLevel = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false),
+                    Timestamp = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    Source = table.Column<string>(type: "TEXT", maxLength: 500, nullable: false),
+                    StackTrace = table.Column<string>(type: "TEXT", maxLength: 8000, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProcessLog", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -70,6 +89,25 @@ namespace StargateApi.Business.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.InsertData(
+                table: "Person",
+                columns: new[] { "Id", "Name" },
+                values: new object[,]
+                {
+                    { 1, "John Doe" },
+                    { 2, "Jane Doe" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "AstronautDetail",
+                columns: new[] { "Id", "CareerEndDate", "CareerStartDate", "CurrentDutyTitle", "CurrentRank", "PersonId" },
+                values: new object[] { 1, null, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Commander", "1LT", 1 });
+
+            migrationBuilder.InsertData(
+                table: "AstronautDuty",
+                columns: new[] { "Id", "DutyEndDate", "DutyStartDate", "DutyTitle", "PersonId", "Rank" },
+                values: new object[] { 1, null, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Commander", 1, "1LT" });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AstronautDetail_PersonId",
                 table: "AstronautDetail",
@@ -80,6 +118,12 @@ namespace StargateApi.Business.Migrations
                 name: "IX_AstronautDuty_PersonId",
                 table: "AstronautDuty",
                 column: "PersonId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Person_Name",
+                table: "Person",
+                column: "Name",
+                unique: true);
         }
 
         /// <inheritdoc />
@@ -90,6 +134,9 @@ namespace StargateApi.Business.Migrations
 
             migrationBuilder.DropTable(
                 name: "AstronautDuty");
+
+            migrationBuilder.DropTable(
+                name: "ProcessLog");
 
             migrationBuilder.DropTable(
                 name: "Person");

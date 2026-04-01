@@ -14,8 +14,7 @@ import { MOCK_PEOPLE, MOCK_DUTIES, MOCK_PROCESS_LOGS } from './mock-data';
 
 @Injectable({ providedIn: 'root' })
 export class StargateService {
-  // Toggle to switch between mock and live API
-  private useMock = true;
+  private useMock = false;
   private apiUrl = 'https://localhost:5001';
 
   private people = [...MOCK_PEOPLE];
