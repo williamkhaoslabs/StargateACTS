@@ -1,0 +1,82 @@
+@if (isOpen) {
+  <div class="overlay" (click)="close.emit()" aria-hidden="true"></div>
+  <aside class="drawer" role="dialog" aria-modal="true" [attr.aria-label]="'Profile: ' + personName">
+    <div class="drawer-header">
+      <h2>Quick View</h2>
+      <button class="close-btn" (click)="close.emit()" aria-label="Close panel">×</button>
+    </div>
+
+    @if (loading) {
+      <div class="drawer-body">
+        <app-loading-spinner [fullPage]="false" message="Loading..." />
+      </div>
+    }
+
+    @if (!loading && error) {
+      <div class="drawer-body">
+        <div class="drawer-error">{{ error }}</div>
+      </div>
+    }
+
+    @if (!loading && !error && person) {
+      <div class="drawer-body">
+        <div class="person-header">
+          <div class="avatar">{{ getInitials(person.name) }}</div>
+          <div>
+            <div class="person-name">{{ person.name }}</div>
+            <app-status-badge
+              [dutyTitle]="person.currentDutyTitle"
+              [careerStartDate]="person.careerStartDate"
+            />
+          </div>
+        </div>
+
+        <div class="detail-grid">
+          <div class="detail-item">
+            <span class="detail-label">Rank</span>
+            <span class="detail-value">{{ person.currentRank || '—' }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Current Duty</span>
+            <span class="detail-value">{{ person.currentDutyTitle || '—' }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Career Start</span>
+            <span class="detail-value">{{ formatDate(person.careerStartDate) }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Career End</span>
+            <span class="detail-value">{{ formatDate(person.careerEndDate) }}</span>
+          </div>
+        </div>
+
+        @if (duties.length > 0) {
+          <div class="section-title">Recent Duties</div>
+          <div class="duty-list">
+            @for (duty of duties.slice(0, 3); track duty.id) {
+              <div class="duty-item">
+                <div class="duty-rank">{{ duty.rank }}</div>
+                <div class="duty-title">{{ duty.dutyTitle }}</div>
+                <div class="duty-dates">
+                  {{ formatDate(duty.dutyStartDate) }} — {{ duty.dutyEndDate ? formatDate(duty.dutyEndDate) : 'Current' }}
+                </div>
+              </div>
+            }
+            @if (duties.length > 3) {
+              <div class="more-hint">+ {{ duties.length - 3 }} more</div>
+            }
+          </div>
+        }
+      </div>
+
+      <div class="drawer-footer">
+        <a class="btn-full" [routerLink]="['/duties', person.name]" (click)="close.emit()">
+          View Full Profile
+        </a>
+        <a class="btn-outline" [routerLink]="['/add-duty']" [queryParams]="{ name: person.name }" (click)="close.emit()">
+          Add Duty
+        </a>
+      </div>
+    }
+  </aside>
+}

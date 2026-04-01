@@ -2,8 +2,6 @@ using API.Middleware;
 using Microsoft.EntityFrameworkCore;
 using StargateAPI.Business.Commands;
 using StargateAPI.Business.Data;
-using StargateAPI.Business.Commands;
-using StargateAPI.Business.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -38,7 +36,7 @@ app.UseCors(x => x
     .AllowAnyHeader()
     .AllowAnyMethod()
     .AllowCredentials()
-    .WithOrigins("http://localhost:4200", "https://localhost:4200"));
+    .WithOrigins("http://localhost:4211", "https://localhost:4211"));
 
 app.UseHttpsRedirection();
 
