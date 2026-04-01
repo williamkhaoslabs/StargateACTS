@@ -14,7 +14,7 @@
 ---
 
 ## Phase 2 — Business Rule
-- [ ] **F5 — Fix CareerEndDate on retirement** — Change new-AstronautDetail path to `AddDays(-1)` matching the update path
+- [x] **F5 — Fix CareerEndDate on retirement** — Change new-AstronautDetail path to `AddDays(-1)` matching the update path
 - [ ] **F9 — Scope duplicate duty check** — Add `z.PersonId == person.Id` filter in CreateAstronautDutyPreProcessor
 - [ ] **F10 — Unique constraint on Person.Name** — Add `builder.HasIndex(x => x.Name).IsUnique()` in PersonConfiguration
 - [ ] **Register CreatePersonPreProcessor** — Add `cfg.AddRequestPreProcessor<CreatePersonPreProcessor>()` in Program.cs

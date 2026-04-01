@@ -1,5 +1,5 @@
-using Dapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using StargateAPI.Business.Data;
 using StargateAPI.Business.Dtos;
 using StargateAPI.Controllers;
@@ -22,22 +22,26 @@ public class GetAstronautDutiesByNameHandler : IRequestHandler<GetAstronautDutie
 
     public async Task<GetAstronautDutiesByNameResult> Handle(GetAstronautDutiesByName request, CancellationToken cancellationToken)
     {
-
-        var result = new GetAstronautDutiesByNameResult();
-
-        var query = $"SELECT a.Id as PersonId, a.Name, b.CurrentRank, b.CurrentDutyTitle, b.CareerStartDate, b.CareerEndDate FROM [Person] a LEFT JOIN [AstronautDetail] b on b.PersonId = a.Id WHERE \'{request.Name}\' = a.Name";
-
-        var person = await _context.Connection.QueryFirstOrDefaultAsync<PersonAstronaut>(query);
-
-        result.Person = person;
-
-        query = $"SELECT * FROM [AstronautDuty] WHERE {person.PersonId} = PersonId Order By DutyStartDate Desc";
-
-        var duties = await _context.Connection.QueryAsync<AstronautDuty>(query);
-
-        result.AstronautDuties = duties.ToList();
-
-        return result;
+        var person = await _context.People
+            .Include(p => p.AstronautDetail)
+            .Include(p => p.AstronautDuties)
+            .FirstOrDefaultAsync(p => p.Name == request.Name, cancellationToken);
+        
+        return new GetAstronautDutiesByNameResult
+        {
+            Person = new PersonAstronaut
+            {
+                PersonId = person.Id,
+                Name = person.Name,
+                CurrentRank = person.AstronautDetail?.CurrentRank,
+                CurrentDutyTitle = person.AstronautDetail?.CurrentDutyTitle,
+                CareerStartDate = person.AstronautDetail?.CareerStartDate,
+                CareerEndDate = person.AstronautDetail?.CareerEndDate
+            },
+            AstronautDuties = person.AstronautDuties
+                .OrderByDescending(d => d.DutyStartDate)
+                .ToList()
+        };
 
     }
 }
