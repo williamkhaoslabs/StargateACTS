@@ -28,36 +28,37 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-  
+    
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
         with:
           languages: ${{ matrix.language }}
+          # This line is key: it keeps JS and C# separate
           source-root: ${{ matrix.language == 'javascript-typescript' && 'stargate-ui' || '.' }}
-      
+    
       - name: Setup .NET 9
         if: matrix.language == 'csharp'
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '9.0.x'
-  
+    
       - name: Build .NET for CodeQL
         if: matrix.language == 'csharp'
         run: |
           dotnet clean
           dotnet build --configuration Release --no-incremental
-      
+    
       - name: Setup Node 22
         if: matrix.language == 'javascript-typescript'
         uses: actions/setup-node@v4
         with:
           node-version: '22'
-  
+    
       - name: Install Angular dependencies
         if: matrix.language == 'javascript-typescript'
         working-directory: stargate-ui
         run: npm ci
-  
+    
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
         with:
@@ -112,7 +113,7 @@ jobs:
       - name: Install dependencies
         working-directory: stargate-ui
         run: npm ci
-        
+
       - name: Test Angular
         working-directory: stargate-ui
         run: npx ng test --watch=false --no-progress
