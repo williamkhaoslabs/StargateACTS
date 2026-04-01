@@ -34,7 +34,7 @@
 - [ ] **F6 — Input validation on CreatePerson** — Reject empty/whitespace names in PreProcessor; trim input
 - [ ] **F6 — Input validation on CreateAstronautDuty** — Reject empty Name, Rank, DutyTitle; reject default DutyStartDate
 - [ ] **F8 — Descriptive error messages** — Replace all `"Bad Request"` strings with specific failure descriptions
-- [ ] **F11 — Add CORS** — Configure `AddCors` / `UseCors` in Program.cs with `http://localhost:4200`
+- [x] **F11 — Add CORS** — Configure `AddCors` / `UseCors` in Program.cs with `http://localhost:4200`
 - [ ] **F7 — Fix access modifier** — Change `public readonly` to `private readonly` in GetPeopleHandler
 - [ ] **Clean up Program.cs** — Remove redundant using directives flagged by Qodana
 - [ ] Verify: POST with empty body returns 400 with clear message, not 500
