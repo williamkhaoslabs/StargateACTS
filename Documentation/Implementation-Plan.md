@@ -5,7 +5,7 @@
 ## Phase 1 — Critical Fixes
 - [x] **F1 — Eliminate SQL injection** — Replace all Dapper raw SQL with EF Core LINQ queries in GetPeople, GetPersonByName, GetAstronautDutiesByName, and CreateAstronautDuty handlers
 - [x] **F1 — Remove StargateContext.Connection** — Delete the `IDbConnection Connection` property; remove `using System.Data` and Dapper dependency from the project
-- [ ] **F2 — Fix wrong MediatR dispatch** — Change `AstronautDutyController.GetAstronautDutiesByName` to send `GetAstronautDutiesByName` instead of `GetPersonByName`
+- [x] **F2 — Fix wrong MediatR dispatch** — Change `AstronautDutyController.GetAstronautDutiesByName` to send `GetAstronautDutiesByName` instead of `GetPersonByName`
 - [ ] **F12 — Null guard in GetAstronautDutiesByNameHandler** — Return 404 with message if person not found
 - [ ] **F13 — Null guard in CreateAstronautDutyHandler** — Return 400 with message if person lookup fails
 - [ ] Verify: `GET /AstronautDuty/{name}` returns both person and duties
