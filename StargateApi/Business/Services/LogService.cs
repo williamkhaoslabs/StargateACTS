@@ -34,7 +34,7 @@ public class LogService : ILogService
             LogLevel = "Error",
             Timestamp = DateTime.UtcNow,
             Source = source,
-            StackTrace = exception.StackTrace
+            StackTrace = exception.ToString()
         };
  
         await _context.ProcessLogs.AddAsync(log);

@@ -1,5 +1,4 @@
 using System.Net;
-using Dapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using StargateAPI.Business.Data;
