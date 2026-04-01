@@ -11,11 +11,6 @@ using StargateAPI.Business.Data;
 namespace StargateApi.Business.Migrations
 {
     [DbContext(typeof(StargateContext))]
-<<<<<<<< HEAD:StargateApi/Business/Migrations/20260401000245_InitialCreate.Designer.cs
-    [Migration("20260401000245_InitialCreate")]
-========
-    [Migration("20260331213619_InitialCreate")]
->>>>>>>> origin/main:StargateApi/Business/Migrations/20260331213619_InitialCreate.Designer.cs
     partial class InitialCreate
     {
         /// <inheritdoc />
