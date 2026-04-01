@@ -1,0 +1,9 @@
+<div class="spinner-wrap" [ngClass]="{ 'full-page': fullPage, 'inline': !fullPage }">
+  <div class="spinner">
+    <div class="ring"></div>
+    <div class="ring inner"></div>
+  </div>
+  @if (message) {
+    <div class="spinner-text">{{ message }}</div>
+  }
+</div>
