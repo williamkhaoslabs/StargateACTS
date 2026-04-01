@@ -8,11 +8,12 @@ import { StatusBadge } from '../../shared/status-badge/status-badge';
 import { Skeleton } from '../../shared/skeleton/skeleton';
 import { DetailDrawer } from '../../shared/detail-drawer/detail-drawer';
 import { Toast, ToastService } from '../../shared/toast/toast';
+import {SafeDatePipe} from '../../pipes/safe-date.pipe';
 
 @Component({
   selector: 'app-directory',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule, StatusBadge, Skeleton, DetailDrawer],
+  imports: [CommonModule, RouterLink, FormsModule, StatusBadge, Skeleton, DetailDrawer, SafeDatePipe],
   templateUrl: './directory.html',
   styleUrl: './directory.scss'
 })

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RunSettings>
+  <DataCollectionRunSettings>
+    <DataCollectors>
+      <DataCollector friendlyName="XPlat Code Coverage">
+        <Configuration>
+          <Format>cobertura</Format>
+          <Exclude>
+            [*]StargateApi.Business.Data.Migrations.*,
+            [*]Microsoft.AspNetCore.OpenApi.Generated.*,
+            [*]System.Runtime.CompilerServices.*OpenApiXmlCommentSupport*,
+            [*]Program
+          </Exclude>
+          <ExcludeByFile>
+            **/Migrations/*.cs,
+            **/obj/**/*.cs,
+            **/Program.cs
+          </ExcludeByFile>
+          <ExcludeByAttribute>
+            System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute,
+            System.CodeDom.Compiler.GeneratedCodeAttribute,
+            System.Runtime.CompilerServices.CompilerGeneratedAttribute
+          </ExcludeByAttribute>
+        </Configuration>
+      </DataCollector>
+    </DataCollectors>
+  </DataCollectionRunSettings>
+</RunSettings>

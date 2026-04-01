@@ -4,7 +4,7 @@ using StargateAPI.Business.Commands;
 using StargateAPI.Business.Queries;
 using StargateAPI.Controllers;
 
-namespace Stargate.API.Controllers;
+namespace StargateAPI.Controllers;
 
 [ApiController]
 [Route("[controller]")]
