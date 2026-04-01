@@ -33,7 +33,6 @@ jobs:
         uses: github/codeql-action/init@v3
         with:
           languages: ${{ matrix.language }}
-          # This line is key: it keeps JS and C# separate
           source-root: ${{ matrix.language == 'javascript-typescript' && 'stargate-ui' || '.' }}
     
       - name: Setup .NET 9
@@ -72,10 +71,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup .NET 10
+      - name: Setup .NET 9
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '10.0.x'
+          dotnet-version: '9.0.x'
 
       - name: Restore dependencies
         run: dotnet restore StargateACTS.sln
