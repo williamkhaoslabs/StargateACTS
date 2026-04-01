@@ -7,6 +7,7 @@ public class StargateContext(DbContextOptions options) : DbContext (options)
     public DbSet<Person> People { get; set; }
     public DbSet<AstronautDetail> AstronautDetails { get; set; }
     public DbSet<AstronautDuty> AstronautDuties { get; set; }
+    public DbSet<ProcessLog> ProcessLogs { get; set; }
     
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

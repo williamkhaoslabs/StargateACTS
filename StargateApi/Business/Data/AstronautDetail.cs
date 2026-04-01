@@ -14,7 +14,7 @@ public class AstronautDetail
     public DateTime CareerStartDate { get; set; }
     public DateTime? CareerEndDate { get; set; }
 
-    public virtual Person Person { get; set; }
+    public virtual Person Person { get; set; } = null!;
 }
 
 public class AstronautDetailConfiguration : IEntityTypeConfiguration<AstronautDetail>
