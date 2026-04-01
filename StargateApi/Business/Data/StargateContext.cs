@@ -18,15 +18,13 @@ public class StargateContext : DbContext
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(StargateContext).Assembly);
-
-            //SeedData(modelBuilder);
+            
 
             base.OnModelCreating(modelBuilder);
         }
 
         private static void SeedData(ModelBuilder modelBuilder)
         {
-            //add seed data
             modelBuilder.Entity<Person>()
                 .HasData(
                     new Person
