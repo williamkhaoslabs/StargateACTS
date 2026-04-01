@@ -1,3 +1,4 @@
+using System.Net;
 using Dapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -15,6 +16,7 @@ public class GetPersonByName : IRequest<GetPersonByNameResult>
 public class GetPersonByNameHandler : IRequestHandler<GetPersonByName, GetPersonByNameResult>
 {
     private readonly StargateContext _context;
+
     public GetPersonByNameHandler(StargateContext context)
     {
         _context = context;
@@ -22,22 +24,33 @@ public class GetPersonByNameHandler : IRequestHandler<GetPersonByName, GetPerson
 
     public async Task<GetPersonByNameResult> Handle(GetPersonByName request, CancellationToken cancellationToken)
     {
+        var result = new GetPersonByNameResult();
+
         var person = await _context.People
+            .AsNoTracking()
             .Include(p => p.AstronautDetail)
-            .FirstOrDefaultAsync(p => p.Name == request.Name, cancellationToken);
-        
-        return new GetPersonByNameResult
-        {
-            Person = new PersonAstronaut
+            .Where(p => p.Name == request.Name)
+            .Select(p => new PersonAstronaut
             {
-                PersonId = person.Id,
-                Name = person.Name,
-                CurrentRank = person.AstronautDetail?.CurrentRank,
-                CurrentDutyTitle = person.AstronautDetail?.CurrentDutyTitle,
-                CareerStartDate = person.AstronautDetail?.CareerStartDate,
-                CareerEndDate = person.AstronautDetail?.CareerEndDate
-            }
-        };
+                PersonId = p.Id,
+                Name = p.Name,
+                CurrentRank = p.AstronautDetail != null ? p.AstronautDetail.CurrentRank : null,
+                CurrentDutyTitle = p.AstronautDetail != null ? p.AstronautDetail.CurrentDutyTitle : null,
+                CareerStartDate = p.AstronautDetail != null ? p.AstronautDetail.CareerStartDate : null,
+                CareerEndDate = p.AstronautDetail != null ? p.AstronautDetail.CareerEndDate : null
+            })
+            .FirstOrDefaultAsync(cancellationToken);
+
+        if (person == null)
+        {
+            result.Success = false;
+            result.Message = $"Person '{request.Name}' not found.";
+            result.ResponseCode = (int)HttpStatusCode.NotFound;
+            return result;
+        }
+
+        result.Person = person;
+        return result;
     }
 }
 
