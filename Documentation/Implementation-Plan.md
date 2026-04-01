@@ -3,7 +3,7 @@
 ---
 
 ## Phase 1 — Critical Fixes
-- [ ] **F1 — Eliminate SQL injection** — Replace all Dapper raw SQL with EF Core LINQ queries in GetPeople, GetPersonByName, GetAstronautDutiesByName, and CreateAstronautDuty handlers
+- [x] **F1 — Eliminate SQL injection** — Replace all Dapper raw SQL with EF Core LINQ queries in GetPeople, GetPersonByName, GetAstronautDutiesByName, and CreateAstronautDuty handlers
 - [ ] **F1 — Remove StargateContext.Connection** — Delete the `IDbConnection Connection` property; remove `using System.Data` and Dapper dependency from the project
 - [ ] **F2 — Fix wrong MediatR dispatch** — Change `AstronautDutyController.GetAstronautDutiesByName` to send `GetAstronautDutiesByName` instead of `GetPersonByName`
 - [ ] **F12 — Null guard in GetAstronautDutiesByNameHandler** — Return 404 with message if person not found
@@ -34,7 +34,7 @@
 - [ ] **F6 — Input validation on CreatePerson** — Reject empty/whitespace names in PreProcessor; trim input
 - [ ] **F6 — Input validation on CreateAstronautDuty** — Reject empty Name, Rank, DutyTitle; reject default DutyStartDate
 - [ ] **F8 — Descriptive error messages** — Replace all `"Bad Request"` strings with specific failure descriptions
-- [ ] **F11 — Add CORS** — Configure `AddCors` / `UseCors` in Program.cs with `http://localhost:4200`
+- [x] **F11 — Add CORS** — Configure `AddCors` / `UseCors` in Program.cs with `http://localhost:4200`
 - [ ] **F7 — Fix access modifier** — Change `public readonly` to `private readonly` in GetPeopleHandler
 - [ ] **Clean up Program.cs** — Remove redundant using directives flagged by Qodana
 - [ ] Verify: POST with empty body returns 400 with clear message, not 500

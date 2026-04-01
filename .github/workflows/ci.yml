@@ -13,56 +13,61 @@ on:
 
 jobs:
   codeql:
-    name: CodeQL Analysis
+    name: CodeQL Analysis (${{ matrix.language }})
     runs-on: ubuntu-latest
     permissions:
       actions: read
       contents: read
       security-events: write
-
+    
     strategy:
       fail-fast: false
       matrix:
         language: [csharp, javascript-typescript]
-
+    
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
+  
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
         with:
-          language: ${{ matrix.language }}
-
-      - name: Setup .NET 10 (for C# analysis)
+          languages: ${{ matrix.language }}
+          # Tell CodeQL exactly where the JS code is to avoid scanning C# folders
+          source-root: ${{ matrix.language == 'javascript-typescript' && 'stargate-ui' || '.' }}
+      
+      # --- ONLY RUN .NET SETUP/BUILD FOR CSHARP ---
+      - name: Setup .NET 9
         if: matrix.language == 'csharp'
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '10.0.x'
-
+          dotnet-version: '9.0.x'
+  
       - name: Build .NET for CodeQL
         if: matrix.language == 'csharp'
         run: |
-          dotnet restore
-          dotnet build --no-restore --configuration Release
-
-      - name: Setup Node 22 (for JS/TS analysis)
+          dotnet clean
+          dotnet build --configuration Release --no-incremental
+      
+      # --- ONLY RUN NODE SETUP/INSTALL FOR JS/TS ---
+      - name: Setup Node 22
         if: matrix.language == 'javascript-typescript'
         uses: actions/setup-node@v4
         with:
           node-version: '22'
-
-      - name: Install Angular dependencies (for JS/TS analysis)
+  
+      - name: Install Angular dependencies
         if: matrix.language == 'javascript-typescript'
         working-directory: stargate-ui
         run: npm ci
-
+  
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
         with:
           category: "/language:${{ matrix.language }}"
 
-  build-and-test:
+  build-and-test-dotnet:
+    name: .NET Build & Test
     runs-on: ubuntu-latest
 
     steps:
@@ -75,27 +80,53 @@ jobs:
           dotnet-version: '10.0.x'
 
       - name: Restore dependencies
-        run: dotnet restore
+        run: dotnet restore StargateACTS.sln
 
       - name: Build
-        run: dotnet build --no-restore --configuration Release
+        run: dotnet build StargateACTS.sln --no-restore --configuration Release
 
       - name: Run tests
-        run: dotnet test StargateAPI.Tests/StargateAPI.Tests.csproj --no-build --configuration Release --collect:"XPlat Code Coverage"
+        run: |
+          dotnet test StargateAPI.Tests/StargateAPI.Tests.csproj \
+            --configuration Release \
+            --collect:"XPlat Code Coverage" \
+            --results-directory ./coverage
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        continue-on-error: true
+        with:
+          name: dotnet-coverage
+          path: ./coverage
+
+  build-and-test-angular:
+    name: Angular Build & Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
 
       - name: Setup Node 22
         uses: actions/setup-node@v4
         with:
           node-version: '22'
 
-      - name: Install Angular dependencies
+      - name: Install dependencies
         working-directory: stargate-ui
         run: npm ci
-
+        
       - name: Test Angular
         working-directory: stargate-ui
-        run: npx ng test --watch=false
-    
+        run: npx ng test --watch=false --no-progress
+
       - name: Build Angular
         working-directory: stargate-ui
         run: npm run build -- --configuration production
+
+      - name: Upload Angular build artifact
+        uses: actions/upload-artifact@v4
+        continue-on-error: true
+        with:
+          name: angular-dist
+          path: stargate-ui/dist/
