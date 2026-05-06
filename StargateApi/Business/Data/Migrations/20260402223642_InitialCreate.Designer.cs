@@ -11,8 +11,8 @@ using StargateAPI.Business.Data;
 namespace StargateApi.Business.Data.Migrations
 {
     [DbContext(typeof(StargateContext))]
-    [Migration("20260401181633_AddMocksAngularChanges")]
-    partial class AddMocksAngularChanges
+    [Migration("20260402223642_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

@@ -1,0 +1,145 @@
+.page-wrap {
+  max-width: 1400px;
+  margin: 0 auto;
+  background: var(--bg-surface-soft);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-md);
+}
+
+.hero {
+  padding: 36px 48px 28px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-surface);
+
+  h1 {
+    margin: 0 0 6px;
+    font-size: 30px;
+    font-weight: 800;
+    color: var(--text-primary);
+  }
+
+  .subtitle {
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 16px;
+  }
+}
+
+.log-list {
+  padding: 24px 48px 40px;
+}
+
+.log-entry {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  padding: 18px 0;
+  border-bottom: 1px solid var(--border-light);
+
+  &:last-child { border-bottom: none; }
+}
+
+.log-dot {
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  font-size: 12px;
+  font-weight: 800;
+  flex-shrink: 0;
+  margin-top: 2px;
+
+  &.info  { background: var(--info-bg); color: var(--info-text); }
+  &.warn  { background: var(--warning-soft); color: #d97706; }
+  &.error { background: var(--error-soft); color: #dc2626; }
+}
+
+.log-content {
+  flex: 1;
+}
+
+.log-message {
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+}
+
+.log-meta {
+  display: flex;
+  gap: 16px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.log-level {
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 4px;
+
+  &.info  { background: var(--info-bg); color: var(--info-text); }
+  &.warn  { background: var(--warning-soft); color: #d97706; }
+  &.error { background: var(--error-soft); color: #dc2626; }
+}
+
+.log-source {
+  color: var(--text-faint);
+}
+
+.log-time {
+  color: var(--text-faint);
+}
+
+.log-stack {
+  margin-top: 10px;
+
+  summary {
+    cursor: pointer;
+    font-size: 13px;
+    color: var(--text-muted);
+    font-weight: 600;
+
+    &:hover { color: #2563eb; }
+  }
+
+  pre {
+    margin: 8px 0 0;
+    padding: 14px;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 12px;
+    color: #475569;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+  }
+}
+
+.empty-state {
+  padding: 80px 40px;
+  text-align: center;
+}
+
+.empty-icon {
+  font-size: 48px;
+  margin-bottom: 12px;
+  opacity: 0.5;
+}
+
+.empty-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #334155;
+  margin: 0 0 6px;
+}
+
+.empty-sub {
+  color: var(--text-faint);
+  font-size: 14px;
+  margin: 0;
+}
